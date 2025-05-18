@@ -1,9 +1,9 @@
 services:
-  app:
+  phpsourcesrf:
     build:
       context: ./
       dockerfile: Dockerfile
-    container_name: basic-php-app
+    container_name: srf-php-basic
     restart: always
     working_dir: /var/www/
     volumes:
@@ -13,7 +13,36 @@ services:
     container_name: basic-docker-nginx
     restart: always
     ports:
-      - 3000:80
+      - 9000:80
     volumes:
       - ../src:/var/www
       - ./nginx:/etc/nginx/conf.d
+  mysql:
+    image: mysql:5.7
+    container_name: basic-docker-mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: srf
+      MYSQL_USER: srf
+      MYSQL_PASSWORD: srf
+    ports:
+      - 3306:3306
+    volumes:
+      - mysql-data:/var/lib/mysql
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    container_name: basic-docker-phpmyadmin
+    restart: always
+    environment:
+      PMA_HOST: mysql  # Links to the MySQL service
+      PMA_USER: root   # Use root or your MySQL user (e.g., srf)
+      PMA_PASSWORD: root  # Match the MySQL root password or user password
+      PMA_ARBITRARY: 1   # Allows connecting to any MySQL server (optional)
+    ports:
+      - 8080:80  # Map port 8080 on host to port 80 in container
+    depends_on:
+      - mysql  # Ensures MySQL starts before phpMyAdmin
+  
+volumes:
+  mysql-data:
