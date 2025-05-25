@@ -8,8 +8,16 @@ header("Access-Control-Allow-Headers: Content-Type");
 $path = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '/';
 $method = isset($_SERVER['REQUEST_METHOD']) ? $_SERVER['REQUEST_METHOD'] : 'GET';
 
-echo json_encode([
-    'path' => $path,
-    'method' => $method,
-    'message' => 'Hello, World!'
-]);
+if ($method === 'POST') {
+    echo json_encode([
+        'path' => $path,
+        'method' => $method,
+        'message' => 'Hello, World!'
+    ]);
+} else {
+    echo json_encode([
+        'path' => $path,
+        'method' => $method,
+        'message' => 'This is a GET request'
+    ]);
+}
